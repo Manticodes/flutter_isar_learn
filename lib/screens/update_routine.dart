@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
+
 import 'package:flutter_isar_learn/collections/category.dart';
 import 'package:flutter_isar_learn/collections/routine.dart';
 
 class UpdateRoutine extends StatefulWidget {
   final Isar isar;
+  final Routine routine;
   const UpdateRoutine({
     Key? key,
     required this.isar,
+    required this.routine,
   }) : super(key: key);
 
   @override
@@ -17,6 +20,7 @@ class UpdateRoutine extends StatefulWidget {
 class _UpdateRoutineState extends State<UpdateRoutine> {
   List<Category>? categories;
   Category? dropDownValue;
+
   List<String> days = [
     'sunday',
     'monday',
@@ -56,10 +60,11 @@ class _UpdateRoutineState extends State<UpdateRoutine> {
 
   _readCategory() async {
     final categorycollection = widget.isar.categorys;
-    final getcategory = await categorycollection.where().findAll();
+    final getcategories = await categorycollection.where().findAll();
+
     setState(() {
       dropDownValue = null;
-      categories = getcategory;
+      categories = getcategories;
     });
   }
 
@@ -77,17 +82,31 @@ class _UpdateRoutineState extends State<UpdateRoutine> {
     dayDropDownValue = "monday";
   }
 
+  _loadInfo() async {
+    await _readCategory();
+    dayDropDownValue = widget.routine.day;
+    timeController.text = widget.routine.startTime;
+    titleController.text = widget.routine.title;
+
+    await widget.routine.category.load();
+    Id getId = widget.routine.category.value!.id;
+
+    setState(() {
+      dropDownValue = categories!.where((element) => element.id == getId).first;
+      print(dropDownValue!.id);
+    });
+  }
+
   @override
   void initState() {
-    // TODO: implement initState
+    _loadInfo();
     super.initState();
-    _readCategory();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Create Routine')),
+      appBar: AppBar(title: const Text('Update Routine')),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(10.0),

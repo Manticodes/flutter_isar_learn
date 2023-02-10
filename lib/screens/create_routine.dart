@@ -49,7 +49,7 @@ class _CreateRoutineState extends State<CreateRoutine> {
   _addcategory(Isar isar) async {
     final categories = isar.categorys;
     final newcategory = Category()..name = newCatController.text;
-    await isar.writeTxn(() => categories.put(newcategory));
+    await isar.writeTxn(() async => await categories.put(newcategory));
     newCatController.clear();
     _readCategory();
   }
@@ -66,15 +66,21 @@ class _CreateRoutineState extends State<CreateRoutine> {
   _addRoutine() async {
     final routines = widget.isar.routines;
     final newRoutine = Routine()
+      ..category.value = dropDownValue
       ..title = titleController.text
       ..startTime = timeController.text
-      ..day = dayDropDownValue
-      ..category.value = dropDownValue;
-    await widget.isar.writeTxn(() => routines.put(newRoutine));
+      ..day = dayDropDownValue;
+
+    await widget.isar.writeTxn(() async {
+      await routines.put(newRoutine);
+      await newRoutine.category.save();
+    });
     titleController.clear();
     timeController.clear();
-    dropDownValue = null;
-    dayDropDownValue = "monday";
+    setState(() {
+      dropDownValue = null;
+      dayDropDownValue = "monday";
+    });
   }
 
   @override
@@ -217,8 +223,9 @@ class _CreateRoutineState extends State<CreateRoutine> {
               Center(
                   child: ElevatedButton(
                       onPressed: () {
-                        _addRoutine();
-                        print(dropDownValue!.name + 'value');
+                        setState(() {
+                          _addRoutine();
+                        });
                       },
                       child: const Text('Add')))
             ]),

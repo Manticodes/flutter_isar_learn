@@ -5,6 +5,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter_isar_learn/collections/category.dart';
 import 'package:flutter_isar_learn/collections/routine.dart';
 import 'package:flutter_isar_learn/screens/create_routine.dart';
+import 'package:flutter_isar_learn/screens/update_routine.dart';
 import 'package:flutter_isar_learn/services/color_schemes.g.dart';
 
 void main() async {
@@ -68,23 +69,28 @@ class _HomePageState extends State<HomePage> {
         ),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: ListView.builder(
-            itemBuilder: (context, index) {
-              return RoutinCard(
-                routine: routines![index],
-              );
-            },
-            itemCount: routines!.length,
-          ),
+          child: routines != null
+              ? ListView.builder(
+                  itemBuilder: (context, index) {
+                    return RoutinCard(
+                      isar: widget.isar,
+                      routine: routines![index],
+                    );
+                  },
+                  itemCount: routines!.length,
+                )
+              : Container(),
         ));
   }
 }
 
 class RoutinCard extends StatelessWidget {
   final Routine routine;
+  final Isar isar;
   const RoutinCard({
     Key? key,
     required this.routine,
+    required this.isar,
   }) : super(key: key);
 
   @override
@@ -121,7 +127,14 @@ class RoutinCard extends StatelessWidget {
             ])),
           )
         ]),
-        trailing: const Icon(Icons.keyboard_arrow_right),
+        trailing: InkWell(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) =>
+                    UpdateRoutine(isar: isar, routine: routine),
+              ));
+            },
+            child: const Icon(Icons.keyboard_arrow_right)),
       ),
     );
   }
