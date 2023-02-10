@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:isar/isar.dart';
 import 'package:flutter_isar_learn/collections/category.dart';
 import 'package:flutter_isar_learn/collections/routine.dart';
-import 'package:isar/isar.dart';
 
-class CreateRoutine extends StatefulWidget {
-  const CreateRoutine({
+class UpdateRoutine extends StatefulWidget {
+  final Isar isar;
+  const UpdateRoutine({
     Key? key,
     required this.isar,
   }) : super(key: key);
-  final Isar isar;
 
   @override
-  State<CreateRoutine> createState() => _CreateRoutineState();
+  State<UpdateRoutine> createState() => _UpdateRoutineState();
 }
 
-class _CreateRoutineState extends State<CreateRoutine> {
+class _UpdateRoutineState extends State<UpdateRoutine> {
   List<Category>? categories;
   Category? dropDownValue;
   List<String> days = [

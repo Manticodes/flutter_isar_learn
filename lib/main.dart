@@ -24,7 +24,7 @@ void main() async {
 
 class HomePage extends StatefulWidget {
   final Isar isar;
-  const HomePage({
+  HomePage({
     Key? key,
     required this.isar,
   }) : super(key: key);
@@ -34,25 +34,94 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<Routine>? routines;
+  @override
+  void initState() {
+    _readRoutinea();
+    super.initState();
+  }
+
+  _readRoutinea() async {
+    final routineCollection = widget.isar.routines;
+    final getRoutines = await routineCollection.where().findAll();
+    setState(() {
+      routines = getRoutines;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Routines'),
-        actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CreateRoutine(isar: widget.isar),
-                    ));
-              },
-              icon: const Icon(Icons.add))
-        ],
-      ),
-      body: const Center(
-        child: Text('asda'),
+        appBar: AppBar(
+          title: const Text('Routines'),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CreateRoutine(isar: widget.isar),
+                      ));
+                },
+                icon: const Icon(Icons.add))
+          ],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ListView.builder(
+            itemBuilder: (context, index) {
+              return RoutinCard(
+                routine: routines![index],
+              );
+            },
+            itemCount: routines!.length,
+          ),
+        ));
+  }
+}
+
+class RoutinCard extends StatelessWidget {
+  final Routine routine;
+  const RoutinCard({
+    Key? key,
+    required this.routine,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 10,
+      child: ListTile(
+        title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 2.0),
+            child: Text(
+              routine.title,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 2.0),
+            child: RichText(
+                text: TextSpan(children: [
+              const WidgetSpan(
+                child: Icon(Icons.lock_clock),
+              ),
+              TextSpan(text: routine.startTime)
+            ])),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 5.0),
+            child: RichText(
+                text: TextSpan(children: [
+              const WidgetSpan(
+                child: Icon(Icons.calendar_month),
+              ),
+              TextSpan(text: routine.day)
+            ])),
+          )
+        ]),
+        trailing: const Icon(Icons.keyboard_arrow_right),
       ),
     );
   }
