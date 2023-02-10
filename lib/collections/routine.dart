@@ -1,9 +1,10 @@
 import 'package:flutter_isar_learn/collections/category.dart';
 import 'package:isar/isar.dart';
+part 'routine.g.dart';
 
 @Collection()
 class Routine {
-  int id = Isar.autoIncrement;
+  Id id = Isar.autoIncrement;
   late String title;
   @Index(composite: [CompositeIndex('title')])
   final category = IsarLink<Category>();
