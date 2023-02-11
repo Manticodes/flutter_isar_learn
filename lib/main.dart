@@ -24,7 +24,7 @@ void main() async {
 
 class HomePage extends StatefulWidget {
   final Isar isar;
-  HomePage({
+  const HomePage({
     Key? key,
     required this.isar,
   }) : super(key: key);
@@ -57,6 +57,32 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text('Routines'),
         actions: [
+          ElevatedButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text('Delete All'),
+                      content: Text('what to delete ?'),
+                      actions: [
+                        ElevatedButton(
+                            onPressed: () => _clearAll(context),
+                            child: Text('Routines')),
+                        ElevatedButton(
+                            onPressed: () => _clearAllC(context),
+                            child: Text('Categories')),
+                        ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text('Cancel')),
+                      ],
+                    );
+                  },
+                );
+              },
+              child: Text('Clear all')),
           IconButton(
               onPressed: () {
                 _addRoutine(context, widget.isar);
@@ -146,5 +172,19 @@ class _HomePageState extends State<HomePage> {
         isSearching = false;
       }
     });
+  }
+
+  _clearAll(BuildContext context) async {
+    await widget.isar.writeTxn(() async {
+      await widget.isar.routines.clear();
+    });
+    Navigator.pop(context);
+  }
+
+  _clearAllC(BuildContext context) async {
+    await widget.isar.writeTxn(() async {
+      await widget.isar.categorys.clear();
+    });
+    Navigator.pop(context);
   }
 }
