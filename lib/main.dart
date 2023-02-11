@@ -137,6 +137,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   _searchRoutine(String text) async {
+    isSearching = true;
     final searchResult =
         await widget.isar.routines.filter().titleContains(text).findAll();
     setState(() {
