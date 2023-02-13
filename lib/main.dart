@@ -24,7 +24,7 @@ void main() async {
         context.read<IsarBloc>().add(AddIsar(isar: isar));
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'routing app',
+          title: 'routing app test',
           theme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
           home: HomePage(),
         );
