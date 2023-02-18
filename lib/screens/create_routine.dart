@@ -222,6 +222,10 @@ class _CreateRoutineState extends State<CreateRoutine> {
                     onPressed: () {
                       setState(() {
                         _addRoutine();
+                        dropDownValue = null;
+                        dayDropDownValue = "monday";
+                        titleController.clear();
+                        timeController.clear();
                       });
                     },
                     child: const Text('Add')))

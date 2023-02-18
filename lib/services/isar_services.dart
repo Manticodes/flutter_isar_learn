@@ -13,6 +13,7 @@ class IsarServices {
   Future<void> addRoutine(Routine routine) async {
     final isar = await db;
     isar.writeTxnSync(() => isar.routines.putSync(routine));
+    await routine.category.save();
   }
 
   Future<void> addCategory(Category category) async {
@@ -27,7 +28,19 @@ class IsarServices {
 
   Future<List<Routine>> getRoutines() async {
     final isar = await db;
+
     return await isar.routines.where().findAll();
+  }
+
+  Future<void> cleanDB() async {
+    final isar = await db;
+    await isar.writeTxnSync(() => isar.clear());
+  }
+
+  Future<void> updateRoutine(Routine routine) async {
+    final isar = await db;
+    isar.writeTxnSync(() => isar.routines.putSync(routine));
+    await routine.category.save();
   }
 
   Future<Isar> openDB() async {
