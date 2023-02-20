@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_isar_learn/collections/category.dart';
 import 'package:flutter_isar_learn/collections/routine.dart';
-import 'package:isar/isar.dart';
 
 import '../bloc/bloc/isar_bloc_bloc.dart';
 

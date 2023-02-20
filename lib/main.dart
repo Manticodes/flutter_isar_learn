@@ -3,11 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_isar_learn/bloc/bloc/isar_bloc_bloc.dart';
 import 'package:flutter_isar_learn/screens/create_routine.dart';
 import 'package:flutter_isar_learn/services/color_schemes.g.dart';
-import 'package:isar/isar.dart';
-import 'package:path_provider/path_provider.dart';
-
-import 'collections/category.dart';
-import 'collections/routine.dart';
 
 void main() async {
   /*  WidgetsFlutterBinding.ensureInitialized();
@@ -197,37 +192,37 @@ class Home2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    context.read<IsarBlocBloc>().add(LoadRoutine());
+    context.read<IsarBlocBloc>().add(LoadDB());
     return Scaffold(
       appBar: AppBar(
         title: const Text('Routines'),
         actions: [
-          /*  ElevatedButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: Text('Delete All'),
-                        content: Text('what to delete ?'),
-                        actions: [
-                          ElevatedButton(
-                              onPressed: () => _clearAll(context),
-                              child: Text('Routines')),
-                          ElevatedButton(
-                              onPressed: () => _clearAllC(context),
-                              child: Text('Categories')),
-                          ElevatedButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: Text('Cancel')),
-                        ],
-                      );
-                    },
-                  );
-                },
-                child: Text('Clear all')), */
+          ElevatedButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text('Delete All'),
+                      content: Text('what to delete ?'),
+                      actions: [
+                        ElevatedButton(
+                            onPressed: () =>
+                                context.read<IsarBlocBloc>().add(ClearDB()),
+                            child: Text('All')),
+                        ElevatedButton(
+                            onPressed: () {}, child: Text('Categories')),
+                        ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text('Cancel')),
+                      ],
+                    );
+                  },
+                );
+              },
+              child: Text('Clear all')),
           IconButton(
               onPressed: () {
                 showModalBottomSheet(

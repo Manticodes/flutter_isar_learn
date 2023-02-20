@@ -16,9 +16,19 @@ class IsarServices {
     await routine.category.save();
   }
 
+  Future<void> removeRoutine(Routine routine) async {
+    final isar = await db;
+    await isar.writeTxn(() => isar.routines.delete(routine.id));
+  }
+
   Future<void> addCategory(Category category) async {
     final isar = await db;
     isar.writeTxnSync(() => isar.categorys.putSync(category));
+  }
+
+  Future<void> removeCategory(Category category) async {
+    final isar = await db;
+    await isar.writeTxn(() => isar.routines.delete(category.id));
   }
 
   Future<List<Category>> getCategories() async {
@@ -35,7 +45,10 @@ class IsarServices {
 
   Future<void> cleanDB() async {
     final isar = await db;
-    await isar.writeTxnSync(() => isar.clear());
+    isar.writeTxnSync(() => isar.routines.clearSync());
+    /* await isar.writeTxn(() async {
+      await isar.routines.clear();
+    }); */
   }
 
   Future<void> updateRoutine(Routine routine) async {
