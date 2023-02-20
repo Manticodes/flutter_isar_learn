@@ -28,6 +28,7 @@ class IsarServices {
 
   Future<List<Routine>> getRoutines() async {
     final isar = await db;
+    Future.value();
 
     return await isar.routines.where().findAll();
   }
