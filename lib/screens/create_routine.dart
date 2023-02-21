@@ -243,8 +243,6 @@ class CreateRoutine extends StatefulWidget {
 }
 
 class _CreateRoutineState extends State<CreateRoutine> {
-  List<Category>? categories;
-
   Category? dropDownValue;
 
   List<String> days = [
@@ -301,14 +299,16 @@ class _CreateRoutineState extends State<CreateRoutine> {
                           width: MediaQuery.of(context).size.width * 0.7,
                           child: DropdownButton(
                             isExpanded: true,
-                            items: categories?.map((e) {
+                            items: state.allCategories.map((e) {
                               return DropdownMenuItem<Category>(
                                 value: e,
                                 child: Text(e.name),
                               );
                             }).toList(),
                             onChanged: (value) {
-                              dropDownValue = value!;
+                              setState(() {
+                                dropDownValue = value!;
+                              });
                             },
                             value: dropDownValue,
                             icon: const Icon(Icons.keyboard_arrow_down),
@@ -328,7 +328,13 @@ class _CreateRoutineState extends State<CreateRoutine> {
                                           onPressed: () {
                                             if (newCatController
                                                 .text.isNotEmpty) {
-                                              // _addcategory(widget.isar);
+                                              context.read<IsarBlocBloc>().add(
+                                                  AddCategory(
+                                                      category: Category()
+                                                        ..name =
+                                                            newCatController
+                                                                .text));
+                                              newCatController.clear();
                                             }
                                           },
                                           child: const Text('Add'))
@@ -432,6 +438,5 @@ class _CreateRoutineState extends State<CreateRoutine> {
         );
       },
     );
-    ;
   }
 }

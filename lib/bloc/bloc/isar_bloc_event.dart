@@ -37,7 +37,12 @@ class DeleteRoutine extends IsarBlocEvent {
   List<Object> get props => [routine];
 }
 
-class ClearDB extends IsarBlocEvent {
+class ClearRoutineDB extends IsarBlocEvent {
+  @override
+  List<Object?> get props => throw UnimplementedError();
+}
+
+class ClearCategoryDB extends IsarBlocEvent {
   @override
   List<Object?> get props => throw UnimplementedError();
 }

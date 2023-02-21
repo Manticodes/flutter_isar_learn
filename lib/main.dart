@@ -207,11 +207,18 @@ class Home2 extends StatelessWidget {
                       content: Text('what to delete ?'),
                       actions: [
                         ElevatedButton(
-                            onPressed: () =>
-                                context.read<IsarBlocBloc>().add(ClearDB()),
+                            onPressed: () => context
+                                .read<IsarBlocBloc>()
+                                .add(ClearRoutineDB()),
                             child: Text('All')),
                         ElevatedButton(
-                            onPressed: () {}, child: Text('Categories')),
+                            onPressed: () {
+                              context
+                                  .read<IsarBlocBloc>()
+                                  .add(ClearCategoryDB());
+                              Navigator.pop(context);
+                            },
+                            child: Text('Categories')),
                         ElevatedButton(
                             onPressed: () {
                               Navigator.pop(context);
