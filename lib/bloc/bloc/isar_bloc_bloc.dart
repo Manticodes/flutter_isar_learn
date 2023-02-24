@@ -61,13 +61,6 @@ class IsarBlocBloc extends Bloc<IsarBlocEvent, IsarBlocState> {
     await loadAndEmit(emit);
   }
 
-  FutureOr<void> loadAndEmit(Emitter<IsarBlocState> emit) async {
-    List<Routine> allRoutes = await IsarServices().getRoutines();
-    List<Category> allCat = await IsarServices().getCategories();
-
-    emit(IsarBlocState(allCategories: allCat, allRoutines: allRoutes));
-  }
-
   FutureOr<void> _onClearRoutineDB(
       ClearRoutineDB event, Emitter<IsarBlocState> emit) async {
     IsarServices().cleanRoutineDB();
@@ -75,8 +68,15 @@ class IsarBlocBloc extends Bloc<IsarBlocEvent, IsarBlocState> {
   }
 
   FutureOr<void> _onClearCategoryDB(
-      ClearCategoryDB event, Emitter<IsarBlocState> emit) {
+      ClearCategoryDB event, Emitter<IsarBlocState> emit) async {
     IsarServices().cleanCategoryDB();
-    loadAndEmit(emit);
+    await loadAndEmit(emit);
+  }
+
+  FutureOr<void> loadAndEmit(Emitter<IsarBlocState> emit) async {
+    List<Routine> allRoutes = await IsarServices().getRoutines();
+    List<Category> allCat = await IsarServices().getCategories();
+
+    emit(IsarBlocState(allCategories: allCat, allRoutines: allRoutes));
   }
 }

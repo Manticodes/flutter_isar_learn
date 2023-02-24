@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_isar_learn/bloc/bloc/isar_bloc_bloc.dart';
-import 'package:flutter_isar_learn/screens/create_routine.dart';
+import 'package:flutter_isar_learn/screens/home_screen.dart';
 import 'package:flutter_isar_learn/services/color_schemes.g.dart';
 
 void main() async {
@@ -17,7 +17,7 @@ void main() async {
       debugShowCheckedModeBanner: false,
       title: 'routing app',
       theme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
-      home: Home2(),
+      home: const HomeScreen(),
     ),
   ));
 }
@@ -187,120 +187,4 @@ class _HomePageState extends State<HomePage> {
   }
 } */
 
-class Home2 extends StatelessWidget {
-  const Home2({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    context.read<IsarBlocBloc>().add(LoadDB());
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Routines'),
-        actions: [
-          ElevatedButton(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: Text('Delete All'),
-                      content: Text('what to delete ?'),
-                      actions: [
-                        ElevatedButton(
-                            onPressed: () => context
-                                .read<IsarBlocBloc>()
-                                .add(ClearRoutineDB()),
-                            child: Text('All')),
-                        ElevatedButton(
-                            onPressed: () {
-                              context
-                                  .read<IsarBlocBloc>()
-                                  .add(ClearCategoryDB());
-                              Navigator.pop(context);
-                            },
-                            child: Text('Categories')),
-                        ElevatedButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: Text('Cancel')),
-                      ],
-                    );
-                  },
-                );
-              },
-              child: Text('Clear all')),
-          IconButton(
-              onPressed: () {
-                showModalBottomSheet(
-                  isScrollControlled: true,
-                  context: context,
-                  builder: (context) {
-                    return CreateRoutine();
-                  },
-                );
-              },
-              icon: const Icon(Icons.add))
-        ],
-      ),
-      body: BlocBuilder<IsarBlocBloc, IsarBlocState>(
-        builder: (context, state) {
-          return ListView.builder(
-            itemBuilder: (context, index) {
-              return ListTile(
-                  title: Text(
-                state.allRoutines[index].startTime,
-              ));
-            },
-            itemCount: state.allRoutines.length,
-          );
-        },
-      ),
-      /* Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-               Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: SizedBox(
-                    height: 50,
-                    child: TextField(
-                        onChanged: _searchRoutine,
-                        onTapOutside: (event) {
-                          FocusManager.instance.primaryFocus!.unfocus();
-                        },
-                        controller: searchController,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          label: Text('Search'),
-                        )),
-                  ),
-                ),
-                 Expanded(
-                child: FutureBuilder(
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return snapshot.data!;
-                    } else {
-                      return Container();
-                    }
-                  },
-                  future: listBuilder(),
-                ),
-              ),
-            ],
-          )), */
-      floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            showModalBottomSheet(
-              isScrollControlled: true,
-              context: context,
-              builder: (context) {
-                return CreateRoutine();
-              },
-            );
-          },
-          child: const Icon(Icons.add)),
-    );
-  }
-}
