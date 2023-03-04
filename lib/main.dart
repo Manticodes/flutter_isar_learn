@@ -17,7 +17,7 @@ void main() async {
       debugShowCheckedModeBanner: false,
       title: 'routing app',
       theme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
-      home: const HomeScreen(),
+      home: HomeScreen(),
     ),
   ));
 }

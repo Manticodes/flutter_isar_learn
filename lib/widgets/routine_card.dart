@@ -35,7 +35,7 @@ class RoutinCard extends StatelessWidget {
               const WidgetSpan(
                 child: Icon(Icons.category),
               ),
-              TextSpan(text: ' ${routine.category.value!.name}')
+              TextSpan(text: ' ${routine.category.value?.name}')
             ])),
           ),
           Padding(

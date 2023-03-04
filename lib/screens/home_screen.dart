@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_isar_learn/collections/routine.dart';
 
 import '../bloc/bloc/isar_bloc_bloc.dart';
 import '../widgets/routine_card.dart';
 import 'create_routine.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  HomeScreen({super.key});
+  TextEditingController searchController = TextEditingController();
+  bool isSearching = false;
+  List<Routine> searchList = <Routine>[];
 
   @override
   Widget build(BuildContext context) {
@@ -66,24 +70,26 @@ class HomeScreen extends StatelessWidget {
           context.read<IsarBlocBloc>().add(LoadDB());
         },
         builder: (context, state) {
-          return ListView.builder(
-            itemBuilder: (context, index) {
-              return RoutinCard(routine: state.allRoutines[index]);
-            },
-            itemCount: state.allRoutines.length,
-          );
-        },
-      ),
-      /* Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-               Padding(
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                Text(' ${state.allRoutines.length} Routine Remain'),
+                Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: SizedBox(
                     height: 50,
                     child: TextField(
-                        onChanged: _searchRoutine,
+                        onChanged: (String text) {
+                          isSearching = true;
+                          searchList = state.allRoutines
+                              .where((element) => element.title.contains(text))
+                              .toList();
+
+                          if (searchController.text.isEmpty) {
+                            isSearching = false;
+                          }
+                        },
                         onTapOutside: (event) {
                           FocusManager.instance.primaryFocus!.unfocus();
                         },
@@ -94,20 +100,24 @@ class HomeScreen extends StatelessWidget {
                         )),
                   ),
                 ),
-                 Expanded(
-                child: FutureBuilder(
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return snapshot.data!;
-                    } else {
-                      return Container();
-                    }
-                  },
-                  future: listBuilder(),
+                Expanded(
+                  child: ListView.builder(
+                    itemBuilder: (context, index) {
+                      return RoutinCard(
+                          routine: isSearching
+                              ? searchList[index]
+                              : state.allRoutines[index]);
+                    },
+                    itemCount: isSearching
+                        ? searchList.length
+                        : state.allRoutines.length,
+                  ),
                 ),
-              ),
-            ],
-          )), */
+              ],
+            ),
+          );
+        },
+      ),
       floatingActionButton: FloatingActionButton(
           onPressed: () {
             showModalBottomSheet(
