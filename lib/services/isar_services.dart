@@ -77,4 +77,13 @@ class IsarServices {
     final isar = await db;
     isar.writeTxnSync(() => isar.categorys.clearSync());
   }
+
+  //!11
+  Future<List<Routine>> getRoutineForCat(int id) async {
+    final isar = await db;
+    return await isar.routines
+        .filter()
+        .category((q) => q.idEqualTo(id))
+        .findAll();
+  }
 }

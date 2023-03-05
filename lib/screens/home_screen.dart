@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_isar_learn/collections/category.dart';
 import 'package:flutter_isar_learn/collections/routine.dart';
+import 'package:flutter_isar_learn/services/isar_services.dart';
 
 import '../bloc/bloc/isar_bloc_bloc.dart';
 import '../widgets/routine_card.dart';
@@ -11,6 +13,12 @@ class HomeScreen extends StatelessWidget {
   TextEditingController searchController = TextEditingController();
   bool isSearching = false;
   List<Routine> searchList = <Routine>[];
+  int? counter;
+  countercat(IsarBlocState state) async {
+    List<Routine> list =
+        await IsarServices().getRoutineForCat(state.allCategories[5].id);
+    counter = list.length;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +76,7 @@ class HomeScreen extends StatelessWidget {
       body: BlocConsumer<IsarBlocBloc, IsarBlocState>(
         listener: (context, state) {
           context.read<IsarBlocBloc>().add(LoadDB());
+          countercat(state);
         },
         builder: (context, state) {
           return Padding(
@@ -75,6 +84,7 @@ class HomeScreen extends StatelessWidget {
             child: Column(
               children: [
                 Text(' ${state.allRoutines.length} Routine Remain'),
+                Text(counter.toString()),
                 Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: SizedBox(

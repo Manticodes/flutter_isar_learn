@@ -2,28 +2,48 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:flutter_isar_learn/services/isar_services.dart';
 import '../bloc/bloc/isar_bloc_bloc.dart';
 import '../collections/routine.dart';
 import '../screens/update_routine_page.dart';
 
-class RoutinCard extends StatelessWidget {
+class RoutinCard extends StatefulWidget {
   final Routine routine;
-
-  const RoutinCard({
+  RoutinCard({
     Key? key,
     required this.routine,
   }) : super(key: key);
+
+  @override
+  State<RoutinCard> createState() => _RoutinCardState();
+}
+
+class _RoutinCardState extends State<RoutinCard> {
+  @override
+  void initState() {
+    setcount();
+    super.initState();
+  }
+
+  int? counter;
+
+  setcount() async {
+    int id = widget.routine.category.value!.id;
+    List<Routine> list = await IsarServices().getRoutineForCat(id);
+    counter = list.length;
+    print(counter);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Card(
       elevation: 10,
       child: ListTile(
+        subtitle: Text(counter.toString()),
         leading: Padding(
           padding: const EdgeInsets.symmetric(vertical: 2.0),
           child: Text(
-            routine.title,
+            widget.routine.title,
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           ),
         ),
@@ -35,7 +55,7 @@ class RoutinCard extends StatelessWidget {
               const WidgetSpan(
                 child: Icon(Icons.category),
               ),
-              TextSpan(text: ' ${routine.category.value?.name}')
+              TextSpan(text: ' ${widget.routine.category.value?.name}')
             ])),
           ),
           Padding(
@@ -45,7 +65,7 @@ class RoutinCard extends StatelessWidget {
               const WidgetSpan(
                 child: Icon(Icons.lock_clock),
               ),
-              TextSpan(text: ' ${routine.startTime}')
+              TextSpan(text: ' ${widget.routine.startTime}')
             ])),
           ),
           Padding(
@@ -55,7 +75,7 @@ class RoutinCard extends StatelessWidget {
               const WidgetSpan(
                 child: Icon(Icons.calendar_month),
               ),
-              TextSpan(text: ' ${routine.day}'),
+              TextSpan(text: ' ${widget.routine.day}'),
               const WidgetSpan(
                   child: SizedBox(
                 width: 20,
@@ -86,9 +106,8 @@ class RoutinCard extends StatelessWidget {
                           actions: [
                             ElevatedButton(
                                 onPressed: () {
-                                  context
-                                      .read<IsarBlocBloc>()
-                                      .add(DeleteRoutine(routine: routine));
+                                  context.read<IsarBlocBloc>().add(
+                                      DeleteRoutine(routine: widget.routine));
                                   Navigator.pop(context);
                                 },
                                 child: const Text('Yes')),
@@ -108,7 +127,7 @@ class RoutinCard extends StatelessWidget {
                 ),
                 InkWell(
                     onTap: () {
-                      _updateRoutine(context, routine);
+                      _updateRoutine(context, widget.routine);
                     },
                     child: const Icon(Icons.keyboard_arrow_right)),
               ],
@@ -130,9 +149,4 @@ class RoutinCard extends StatelessWidget {
       },
     );
   }
-
-  /* _deleteRoutine(BuildContext context) async {
-    await isar.writeTxn(() => isar.routines.delete(routine.id));
-    Navigator.pop(context);
-  } */
 }
